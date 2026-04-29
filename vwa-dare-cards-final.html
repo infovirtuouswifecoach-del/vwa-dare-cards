@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love & Respect Dare Cards — The Virtuous Wife Academy™</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Lato',sans-serif;background:#F0ECF8;min-height:100vh;}
+
+/* LOGIN */
+#login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:30px 20px;}
+.login-box{background:#fff;border-radius:20px;border:1px solid #D4C8E8;padding:40px 32px;width:100%;max-width:380px;text-align:center;}
+.login-brand{font-family:'Playfair Display',serif;font-size:11px;letter-spacing:.2em;color:#C9A84C;text-transform:uppercase;margin-bottom:10px;}
+.login-title{font-family:'Playfair Display',serif;font-size:22px;color:#2E2040;margin-bottom:6px;line-height:1.3;}
+.login-sub{font-size:13px;color:#7B6B99;margin:8px 0 28px;line-height:1.6;}
+.pw-field{width:100%;padding:13px 16px;border-radius:12px;border:1.5px solid #D4C8E8;font-family:'Lato',sans-serif;font-size:15px;color:#2E2040;background:#F0ECF8;outline:none;text-align:center;letter-spacing:.12em;margin-bottom:12px;}
+.pw-field:focus{border-color:#B8A9C9;}
+.enter-btn{width:100%;padding:14px;border-radius:12px;border:none;background:#2E2040;color:#fff;font-family:'Lato',sans-serif;font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;}
+.enter-btn:hover{background:#C9A84C;}
+.err-msg{font-size:12px;color:#993556;margin-top:10px;min-height:18px;}
+
+/* APP — hidden until login */
+#app{display:none;flex-direction:column;align-items:center;min-height:100vh;}
+
+.header{width:100%;background:#2E2040;padding:24px 20px 18px;text-align:center;}
+.header-brand{font-family:'Playfair Display',serif;font-size:11px;letter-spacing:.2em;color:#C9A84C;text-transform:uppercase;margin-bottom:5px;}
+.header-title{font-family:'Playfair Display',serif;font-size:22px;color:#fff;}
+
+.top-row{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:480px;padding:16px 16px 0;}
+.counter{font-size:12px;color:#7B6B99;letter-spacing:.05em;text-transform:uppercase;}
+.shuffle-btn{padding:7px 18px;border-radius:20px;border:1.5px solid #C9A84C;background:transparent;color:#C9A84C;font-family:'Lato',sans-serif;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;transition:all .18s;}
+.shuffle-btn:hover:not([disabled]){background:#C9A84C;color:#2E2040;}
+.shuffle-btn[disabled]{border-color:#D4C8E8;color:#D4C8E8;cursor:not-allowed;}
+
+.deck-stage{width:100%;max-width:480px;padding:16px 16px 0;}
+.card-stack{position:relative;width:100%;min-height:420px;}
+
+.ghost{position:absolute;width:100%;border-radius:18px;background:#fff;border:1px solid #D4C8E8;}
+.ghost-2{top:8px;left:6px;right:6px;height:100%;opacity:.4;z-index:1;}
+.ghost-1{top:4px;left:3px;right:3px;height:100%;opacity:.7;z-index:2;}
+
+.card{position:relative;z-index:10;background:#fff;border-radius:18px;border:1px solid #D4C8E8;padding:28px 24px;min-height:400px;display:flex;flex-direction:column;gap:14px;box-shadow:0 4px 20px rgba(46,32,64,.1);cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;overflow:hidden;}
+.card::after{content:'Janiqua Kelley';position:absolute;bottom:18px;right:20px;font-family:'Playfair Display',serif;font-size:13px;color:#7B6B99;font-style:italic;letter-spacing:.04em;pointer-events:none;z-index:0;}
+.card.fly-left{animation:flyLeft .38s ease forwards;}
+.card.fly-right{animation:flyRight .38s ease forwards;}
+.card.come-in{animation:comeIn .35s ease forwards;}
+.card.shuffling{animation:shuffleIt .6s ease;}
+
+@keyframes flyLeft{to{transform:translateX(-130%) rotate(-12deg);opacity:0;}}
+@keyframes flyRight{to{transform:translateX(130%) rotate(12deg);opacity:0;}}
+@keyframes comeIn{from{transform:translateY(28px) scale(.96);opacity:0;}to{transform:none;opacity:1;}}
+@keyframes shuffleIt{0%{transform:none;}20%{transform:translateX(-20px) rotate(-4deg);}50%{transform:translateX(20px) rotate(4deg);}75%{transform:translateX(-8px) rotate(-2deg);}100%{transform:none;}}
+
+/* COVER */
+.cover-bg{background:#2E2040;border-color:#C9A84C;cursor:default;}
+.cv-star{font-size:26px;color:#C9A84C;text-align:center;}
+.cv-title{font-family:'Playfair Display',serif;font-size:24px;color:#fff;text-align:center;line-height:1.3;}
+.cv-sub{font-size:11px;color:#C9A84C;letter-spacing:.14em;text-transform:uppercase;text-align:center;}
+.cv-line{width:44px;height:2px;background:#C9A84C;margin:12px auto;}
+.cv-steps{background:rgba(255,255,255,.07);border:1px solid rgba(201,168,76,.25);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
+.cv-step{display:flex;gap:10px;align-items:flex-start;}
+.cv-num{min-width:22px;height:22px;border-radius:50%;background:#C9A84C;color:#2E2040;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.cv-text{font-size:13px;color:#D4C8E8;line-height:1.65;}
+.cv-text b{color:#fff;}
+.cv-btn{margin-top:8px;width:100%;padding:13px;border-radius:12px;border:none;background:#C9A84C;color:#2E2040;font-family:'Lato',sans-serif;font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;cursor:pointer;}
+.cv-btn:hover{opacity:.9;}
+
+/* DARE CARDS */
+.card-num{font-size:11px;color:#B8A9C9;font-weight:700;letter-spacing:.1em;text-transform:uppercase;}
+.badge{display:inline-block;padding:4px 13px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;}
+.b-touch{background:#FBEAF0;color:#993556;}
+.b-words{background:#EEEDFE;color:#3C3489;}
+.b-time{background:#E1F5EE;color:#085041;}
+.b-service{background:#EAF3DE;color:#27500A;}
+.b-gifts{background:#FAECE7;color:#712B13;}
+.b-respect{background:#F0ECF8;color:#7B6B99;}
+.card-title{font-family:'Playfair Display',serif;font-size:20px;color:#2E2040;line-height:1.3;}
+.card-dare{font-size:14px;color:#444;line-height:1.75;}
+.example-box{background:#F0ECF8;border-left:3px solid #B8A9C9;border-radius:0 8px 8px 0;padding:11px 14px;}
+.ex-label{font-size:10px;color:#7B6B99;font-weight:700;letter-spacing:.1em;text-transform:uppercase;display:block;margin-bottom:4px;}
+.ex-text{font-size:13px;color:#555;line-height:1.65;}
+.scripture-box{border-top:1px solid #D4C8E8;padding-top:14px;}
+.scripture-q{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:#2E2040;line-height:1.75;margin-bottom:5px;}
+.scripture-ref{font-size:11px;color:#C9A84C;font-weight:700;}
+.reflection{font-size:13px;color:#555;line-height:1.75;}
+.skool-note{background:#F0ECF8;border-radius:10px;padding:10px 13px;font-size:12px;color:#7B6B99;line-height:1.6;margin-top:auto;}
+.skool-note b{color:#2E2040;}
+.tap-hint{text-align:center;font-size:12px;color:#B8A9C9;}
+
+.footer{padding:28px 0 40px;text-align:center;}
+.footer-brand{font-family:'Playfair Display',serif;font-size:13px;color:#7B6B99;}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-brand">The Virtuous Wife Academy™</div>
+    <div class="login-title">Love &amp; Respect<br>Dare Cards</div>
+    <div class="login-sub">For wives who love on purpose.<br>Enter your access password to begin.</div>
+    <input class="pw-field" id="pw" type="password" placeholder="Enter password" />
+    <button class="enter-btn" id="enter-btn">Enter</button>
+    <div class="err-msg" id="err"></div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="header">
+    <div class="header-brand">The Virtuous Wife Academy™</div>
+    <div class="header-title">Love &amp; Respect Dare Cards</div>
+  </div>
+  <div class="top-row">
+    <span></span>
+    <button class="shuffle-btn" id="shuf-btn">&#10227; Shuffle</button>
+  </div>
+  <div class="deck-stage">
+    <div class="card-stack">
+      <div class="ghost ghost-2" id="g2"></div>
+      <div class="ghost ghost-1" id="g1"></div>
+      <div class="card cover-bg" id="card">
+        <div id="ci"></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer"><div class="footer-brand">The Virtuous Wife Academy™</div></div>
+</div>
+
+<script>
+var PASS = 'virtue';
+var deck, cur, showBack, onCover, shuffled, busy;
+var tx0, ty0, mx0, my0, mdown;
+
+var DATA = [
+  {l:'touch',lb:'Physical Touch',n:1,t:'Reach for His Hand',d:'Initiate physical touch with your husband at least 3 times today — with no agenda attached.',e:'Reach over and grab his hand while sitting together. Touch his arm while he is talking. Give him a long, intentional hug before he leaves.',s:'Thy wife shall be as a fruitful vine by the sides of thine house.',r:'Psalm 128:3',rf:'Touch communicates what words sometimes cannot. When you initiate connection without a request behind it, you tell your husband he is wanted — not just needed.'},
+  {l:'touch',lb:'Physical Touch',n:2,t:'Greet Him at the Door',d:'When your husband walks through the door, stop what you are doing and greet him with a warm embrace.',e:'Put down your phone, pause the cooking, step away from the kids — and go to him first. Let him feel that his arrival matters.',s:'Whoso findeth a wife findeth a good thing, and obtaineth favour of the LORD.',r:'Proverbs 18:22',rf:'The way you receive your husband sets the temperature of your home. A wife who runs to greet her husband tells him he is coming home to a safe place.'},
+  {l:'touch',lb:'Physical Touch',n:3,t:'Sit Close on Purpose',d:'Tonight, sit next to your husband — not across from him, not in a separate seat. Close enough to touch.',e:'On the couch, scoot over and lean into him. Rest your head on his shoulder. Let your leg touch his. Simple proximity is its own love language.',s:'I am my beloved\'s and my beloved is mine.',r:'Song of Solomon 6:3',rf:'Proximity is a declaration. When a wife chooses to be near her husband — not because she has to, but because she wants to — she preaches a sermon his heart will never forget.'},
+  {l:'touch',lb:'Physical Touch',n:4,t:'Give a 6-Second Hug',d:'Give your husband a hug that lasts at least 6 seconds today — no pulling away early.',e:'A 6-second hug releases oxytocin — the bonding hormone. Hold on a little longer than feels comfortable. That moment of staying is everything.',s:'Let him kiss me with the kisses of his mouth: for thy love is better than wine.',r:'Song of Solomon 1:2',rf:'Lingering in an embrace says: I am not in a hurry to leave you. In a fast-paced world, slowing down to hold your husband is an act of love that speaks directly to his soul.'},
+  {l:'touch',lb:'Physical Touch',n:5,t:'Touch His Face',d:'At some point today, cup your husband\'s face in your hands and look at him — really look at him.',e:'It can be in the morning, before bed, or any quiet moment. No words required. Just your hands, his face, and your full attention.',s:'His left hand is under my head, and his right hand doth embrace me.',r:'Song of Solomon 2:6',rf:'Intentional touch to the face is one of the most intimate gestures between a husband and wife. It says: I see you. I choose you. I am here.'},
+  {l:'touch',lb:'Physical Touch',n:6,t:'Hold His Hand in Public',d:'The next time you are out together, reach over and take your husband\'s hand without being asked.',e:'Walking into church, at a restaurant, in a parking lot — grab his hand and hold it. Let the world see that you are proud to be beside him.',s:'Draw me, we will run after thee.',r:'Song of Solomon 1:4',rf:'Public affection is a declaration. When you reach for your husband\'s hand in front of others, you are telling him and everyone watching: I chose this man and I would choose him again.'},
+  {l:'words',lb:'Words of Affirmation',n:7,t:'Tell Him What You Admire',d:'Look your husband in the eyes today and tell him one specific thing you genuinely admire about him.',e:'"I admire the way you stay calm under pressure." or "I love how hard you work for this family." Specific words land deeper.',s:'She openeth her mouth with wisdom; and in her tongue is the law of kindness.',r:'Proverbs 31:26',rf:'Your husband may never say it out loud, but he is listening for your approval more than anyone else\'s. When you speak life over him, you become his greatest source of strength.'},
+  {l:'words',lb:'Words of Affirmation',n:8,t:'Send Him a Voice Note',d:'Send your husband a voice note today — just to tell him something you love about him.',e:'"I was thinking about you and wanted you to hear my voice. I am proud of you and I love you." Let him replay it on hard days.',s:'Death and life are in the power of the tongue.',r:'Proverbs 18:21',rf:'A wife\'s voice is anointed. It has the power to build or break. Today choose to use it to build — and watch how that one message carries your husband further than you will ever know.'},
+  {l:'words',lb:'Words of Affirmation',n:9,t:'Brag on Him Out Loud',d:'Say something affirming about your husband in front of someone else today — your kids, a friend, your family.',e:'"Your daddy works so hard for us and I am so grateful for him." Let him overhear you honoring him. Public praise lands on a man differently.',s:'Her husband is known in the gates, when he sitteth among the elders of the land.',r:'Proverbs 31:23',rf:'A virtuous wife builds her husband\'s reputation. When you speak well of him publicly, you are modeling covenant love for everyone watching.'},
+  {l:'words',lb:'Words of Affirmation',n:10,t:'Write a List of His Strengths',d:'Write down 10 strengths you see in your husband and leave the list where he will find it.',e:'Think about his character, his gifts, his role as father, provider, protector. Be specific. Watch what happens when a man sees himself through his wife\'s eyes.',s:'A virtuous woman is a crown to her husband.',r:'Proverbs 12:4',rf:'Most men are fighting battles no one sees. Your list of his strengths becomes armor he wears into those battles. A wife who sees greatness in her husband calls it forth.'},
+  {l:'words',lb:'Words of Affirmation',n:11,t:'Say I Believe in You',d:"Look at your husband today and say: 'I believe in you.' Mean it. Let him feel it.",e:'Say it before a hard meeting, after a difficult day, or out of nowhere. Those four words — delivered with sincerity — can shift something deep inside a man.',s:'She will do him good and not evil all the days of her life.',r:'Proverbs 31:12',rf:"Every man needs one person in his corner who believes in him without condition. God designed that person to be his wife."},
+  {l:'words',lb:'Words of Affirmation',n:12,t:'Thank Him for Something Specific',d:'Thank your husband today for something specific he does that you may have started taking for granted.',e:'"Thank you for going to work every day so our family is covered." Noticed effort multiplies.',s:'And let the peace of God rule in your hearts... and be ye thankful.',r:'Colossians 3:15',rf:'Gratitude is not just a feeling — it is a practice. When you intentionally thank your husband for what he does consistently, you remind him that his sacrifice is seen.'},
+  {l:'time',lb:'Quality Time',n:13,t:'Plan a No-Phone Evening',d:'Set aside one full hour tonight with no phones, no screens — just you and your husband.',e:'Play a card game, cook together, take a walk, or simply sit and talk. The activity does not matter. Your full presence does.',s:'Two are better than one; because they have a good reward for their labour.',r:'Ecclesiastes 4:9',rf:'In a world full of distractions, choosing your husband with your time is one of the most powerful things you can do. Your presence says: you are my priority, not my obligation.'},
+  {l:'time',lb:'Quality Time',n:14,t:'Ask Him a Deep Question',d:'Tonight, ask your husband one meaningful question and truly listen to his full answer.',e:'"What is one dream you have that we have not talked about in a while?" Then be quiet and receive what he shares.',s:'Be swift to hear, slow to speak, slow to wrath.',r:'James 1:19',rf:'Most husbands stop sharing because they stopped feeling heard. When you create a safe space for his voice, you invite him back into the marriage emotionally.'},
+  {l:'time',lb:'Quality Time',n:15,t:'Recreate Your First Date',d:'Plan or suggest recreating something from the early days of your relationship — a restaurant, activity, or movie you watched together.',e:'Order the same food from your first date. Watch a movie you saw early on. Nostalgia is a bridge back to each other.',s:'I remember thee, the kindness of thy youth, the love of thine espousals.',r:'Jeremiah 2:2',rf:'God honors covenant memory. When you return to the beginning intentionally, you remind each other why you chose this — and choosing again, on purpose, is one of the most romantic things a wife can do.'},
+  {l:'time',lb:'Quality Time',n:16,t:'Wake Up 20 Minutes Early Together',d:'Set your alarm 20 minutes earlier tomorrow and use that time to be with your husband — just the two of you before the day begins.',e:'Have coffee together in quiet. Pray together. Read a verse. Talk without distraction. Twenty minutes of intentional morning connection changes the tone of the whole day.',s:'She riseth also while it is yet night.',r:'Proverbs 31:15',rf:'How you start the day together determines how you face the day apart. A wife who prioritizes connection in the morning is building something in her marriage that the enemy cannot easily tear down.'},
+  {l:'time',lb:'Quality Time',n:17,t:'Go on a Walk Together',d:'Ask your husband to go on a walk with you today — even if it is just around the block.',e:'No agenda. No heavy conversations. Just movement, fresh air, and being side by side. Walking together opens conversations that sitting never does.',s:'Can two walk together, except they be agreed?',r:'Amos 3:3',rf:'Side-by-side time is different from face-to-face time. Walking together removes pressure and creates ease. Some of the most important conversations in a marriage happen when both people are simply moving in the same direction.'},
+  {l:'service',lb:'Acts of Service',n:18,t:'Handle Something on His Plate',d:'Take one task off your husband\'s list today without being asked and without announcing it.',e:'Schedule the appointment he has been putting off. Handle a bill. Fix something he has mentioned. Let him discover it done — silently.',s:'She looketh well to the ways of her household, and eateth not the bread of idleness.',r:'Proverbs 31:27',rf:'A virtuous wife sees. She pays attention to what burdens her husband and moves quietly to lighten the load. That kind of service is strategic, intentional, kingdom-level love.'},
+  {l:'service',lb:'Acts of Service',n:19,t:'Prepare His Favorite Meal',d:'Cook or order your husband\'s absolute favorite meal today — just because you love him.',e:'It does not have to be fancy. It just has to be his. Set the table nicely. Light a candle. Let him walk into an atmosphere that says: I thought about you today.',s:'She riseth also while it is yet night, and giveth meat to her household.',r:'Proverbs 31:15',rf:'Feeding someone is an act of love as old as creation. When you prepare something specifically for him — out of delight, not duty — you are ministering to him in a way he will feel long after the meal is done.'},
+  {l:'service',lb:'Acts of Service',n:20,t:'Create a Peaceful Environment',d:'Before your husband comes home, spend 15 minutes creating peace in your home — clean one space, light a candle, lower the noise.',e:'Tidy the living room, start dinner early, turn on soft music. Let the atmosphere say: I prepared a place for you. You are welcome here.',s:'Every wise woman buildeth her house: but the foolish plucketh it down with her hands.',r:'Proverbs 14:1',rf:'A wife builds the atmosphere of her home. What your husband walks into shapes how he shows up in your marriage. When you create peace on purpose, you are being the builder God called you to be.'},
+  {l:'service',lb:'Acts of Service',n:21,t:'Pray Together Before Bed',d:'Tonight before bed, ask your husband to pray with you — or offer to pray over him.',e:'Keep it simple. Hold his hand, close your eyes, and speak to God together. Even two minutes of shared prayer builds a wall of protection around your marriage.',s:'Praying always with all prayer and supplication in the Spirit.',r:'Ephesians 6:18',rf:'A couple that prays together invites God into the center of their covenant. The enemy cannot easily penetrate a marriage where the husband and wife regularly kneel before the Lord together.'},
+  {l:'respect',lb:'Respect Dare',n:22,t:'Let Him Lead a Decision',d:'Today, defer to your husband\'s decision in at least one area without debate or correction.',e:'Whether it is what to eat, how to handle a situation, or a plan for the family — let him lead and trust God to lead him.',s:'Wives, submit yourselves unto your own husbands, as unto the Lord.',r:'Ephesians 5:22',rf:"Submission is not a prison — it is a position of power. When you yield your need to control, you make room for him to rise into the man God called him to be."},
+  {l:'respect',lb:'Respect Dare',n:23,t:'Do Not Correct Him in Public',d:'Today, commit: if your husband says something slightly off in front of others, let it go. Save the correction for a private moment.',e:'If he misremembers a detail or makes a small mistake at dinner — smile and let it pass. His dignity in front of others is your responsibility to protect.',s:'A virtuous woman is a crown to her husband: but she that maketh ashamed is as rottenness in his bones.',r:'Proverbs 12:4',rf:'A wife who honors her husband publicly even when she disagrees privately is displaying rare and powerful virtue. You can address anything in private — but once you correct a man in front of others, it is hard to undo.'},
+  {l:'respect',lb:'Respect Dare',n:24,t:'Ask for His Opinion',d:'Today, go to your husband and genuinely ask for his opinion on something — and actually consider what he says.',e:'Ask about a decision you are facing, something in the home, or how he thinks you should handle a situation. Then truly listen without preparing your rebuttal.',s:'The heart of her husband doth safely trust in her.',r:'Proverbs 31:11',rf:'When a wife consistently seeks her husband\'s input, she builds his confidence and trust. A man who feels respected at home shows up differently everywhere else.'},
+  {l:'respect',lb:'Respect Dare',n:25,t:"Say 'You Were Right'",d:'If there is a situation where your husband was correct about something — tell him. Out loud. Clearly.',e:"'You were right about that. I should have listened.' Three seconds of humility can undo months of disconnection.",s:'Submitting yourselves one to another in the fear of God.',r:'Ephesians 5:21',rf:"Pride is one of the greatest marriage killers. When a wife can say 'you were right' without resentment, she demonstrates the kind of security that makes a husband feel safe enough to be vulnerable in return."},
+  {l:'gifts',lb:'Gifts',n:26,t:'Leave Him a Written Note',d:'Write your husband a short handwritten note and leave it somewhere he will find it today.',e:"In his car. In his wallet. On the bathroom mirror. Keep it simple: 'I love you and I am grateful God gave me you.'",s:'A good man leaveth an inheritance to his children\'s children.',r:'Proverbs 13:22',rf:'Gifts do not have to cost money to carry weight. A handwritten word from the woman your husband loves is something he may keep for years.'},
+  {l:'gifts',lb:'Gifts',n:27,t:'Pick Up Something He Likes',d:'The next time you are out, pick up one small thing your husband enjoys — just because you thought of him.',e:'His favorite snack. A coffee the way he likes it. A book he mentioned. A small gesture that says: even when I am busy, you cross my mind.',s:'Give, and it shall be given unto you; good measure, pressed down, and shaken together, and running over.',r:'Luke 6:38',rf:'Generosity is a posture, not a price tag. When you move through your day looking for ways to bless your husband — even in small things — you practice the kind of love that builds marriages that last.'},
+  {l:'gifts',lb:'Gifts',n:28,t:'Give Him the Gift of Prayer',d:"Tell your husband: 'I prayed for you specifically today.' Then share what you prayed.",e:'"I prayed that God would strengthen you in your purpose and open doors no man can close." Let him know he has a wife in his corner before the throne.',s:'The effectual fervent prayer of a righteous man availeth much.',r:'James 5:16',rf:'The most powerful gift you can give your husband costs nothing but time on your knees. A wife who prays specifically for her husband gives him access to heaven on his behalf.'},
+  {l:'gifts',lb:'Gifts',n:29,t:'Plan a Surprise for Him',d:'Plan one small surprise for your husband this week — something thoughtful, just from you to him.',e:'Set up a movie night with his favorite snacks. Arrange a babysitter for an evening alone. Write him a letter and seal it. The thought behind it is what matters most.',s:'She is like the merchants\' ships; she bringeth her food from afar.',r:'Proverbs 31:14',rf:'A wife who goes out of her way to bless her husband without being asked is demonstrating the kind of love that mirrors God\'s nature. Surprise generosity is one of the most powerful ways to reignite delight in a marriage.'},
+  {l:'gifts',lb:'Gifts',n:30,t:'Create a Marriage Vision Statement',d:"Sit down and write out what you believe God's vision is for your marriage — then give it to your husband as a gift.",e:'Write 3 to 5 sentences declaring who you are as a couple, what your home stands for, and what legacy you are building. Frame it somewhere you both can see it.',s:'Where there is no vision, the people perish.',r:'Proverbs 29:18',rf:"A marriage without vision drifts. A marriage with vision moves on purpose. When you define the WHY behind your covenant and put it in his hands, you give your husband something to lead toward."}
+];
+
+function init(){
+  deck=[]; cur=0; showBack=false; onCover=true; shuffled=false; busy=false;
+  for(var i=0;i<DATA.length;i++) deck.push(DATA[i]);
+}
+
+function tryLogin(){
+  var v=document.getElementById('pw').value.trim().toLowerCase();
+  if(v===PASS){
+    document.getElementById('login-screen').style.display='none';
+    var a=document.getElementById('app');
+    a.style.display='flex';
+    init();
+    showCover();
+  } else {
+    document.getElementById('err').textContent='Incorrect password. Please try again.';
+    document.getElementById('pw').value='';
+    document.getElementById('pw').focus();
+  }
+}
+
+function showCover(){
+  onCover=true;
+  var card=document.getElementById('card');
+  card.className='card cover-bg';
+  card.onclick=null;
+
+  document.getElementById('g1').style.display='block';
+  document.getElementById('g2').style.display='block';
+  var h='<div class="cv-star">&#9733;</div>';
+  h+='<div class="cv-title">Ready To Start</div>';
+  h+='<div class="cv-sub">Love &amp; Respect Dare Cards</div>';
+  h+='<div class="cv-line"></div>';
+  h+='<div class="cv-steps">';
+  h+='<div class="cv-step"><div class="cv-num">1</div><div class="cv-text">You have <b>30 dare cards</b> — each one is a faith-based challenge to love and respect your husband that day.</div></div>';
+  h+='<div class="cv-step"><div class="cv-num">2</div><div class="cv-text">Tap <b>Shuffle</b> once to randomize your deck. <b>You only get one shuffle</b> — make it count!</div></div>';
+  h+='<div class="cv-step"><div class="cv-num">3</div><div class="cv-text">Tap the card to reveal <b>scripture &amp; reflection</b> on the back. Swipe left or right to move between cards.</div></div>';
+  h+='<div class="cv-step"><div class="cv-num">4</div><div class="cv-text">When you complete a dare, go to <b>Skool</b> and click the checkmark for the <b>matching card number</b> for accountability.</div></div>';
+  h+='</div>';
+  h+='<button class="cv-btn" onclick="startDeck()">Let\'s Begin &#8594;</button>';
+  document.getElementById('ci').innerHTML=h;
+}
+
+function startDeck(){
+  onCover=false; cur=0; showBack=false;
+  var card=document.getElementById('card');
+  card.className='card';
+  addCardEvents(card);
+  render();
+}
+
+function render(){
+  if(onCover) return;
+  var c=deck[cur];
+  var h='<div class="card-num">Card '+c.n+' of 30</div>';
+  h+='<span class="badge b-'+c.l+'">'+c.lb+'</span>';
+  if(!showBack){
+    h+='<div class="card-title">'+c.t+'</div>';
+    h+='<div class="card-dare">'+c.d+'</div>';
+    h+='<div class="example-box"><span class="ex-label">Practical Example</span><span class="ex-text">'+c.e+'</span></div>';
+    h+='<div class="skool-note">&#10003; When done, go to <b>Skool</b> and check off <b>Card '+c.n+'</b> for accountability.</div>';
+    h+='<div class="tap-hint">Tap card for scripture &amp; reflection</div>';
+  } else {
+    h+='<div class="card-title">'+c.t+'</div>';
+    h+='<div class="scripture-box"><div class="scripture-q">&ldquo;'+c.s+'&rdquo;</div><div class="scripture-ref">&#8212; '+c.r+'</div></div>';
+    h+='<div class="reflection">'+c.rf+'</div>';
+    h+='<div class="tap-hint">Tap to return to the dare</div>';
+  }
+  document.getElementById('ci').innerHTML=h;
+
+  var rem=deck.length-(cur+1);
+  document.getElementById('g1').style.display=rem>=1?'block':'none';
+  document.getElementById('g2').style.display=rem>=2?'block':'none';
+}
+
+function flip(){
+  if(busy||onCover) return;
+  showBack=!showBack;
+  render();
+}
+
+function goCard(dir){
+  if(busy||onCover) return;
+  busy=true; showBack=false;
+  var next=(cur+dir+deck.length)%deck.length;
+  var card=document.getElementById('card');
+  card.classList.add(dir>0?'fly-left':'fly-right');
+  setTimeout(function(){
+    card.classList.remove('fly-left','fly-right');
+    cur=next; render();
+    card.classList.add('come-in');
+    setTimeout(function(){card.classList.remove('come-in');busy=false;},370);
+  },370);
+}
+
+function doShuffle(){
+  if(busy||shuffled||onCover) return;
+  shuffled=true; busy=true;
+  for(var i=deck.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=deck[i];deck[i]=deck[j];deck[j]=t;}
+  cur=0; showBack=false;
+  var card=document.getElementById('card');
+  card.classList.add('shuffling');
+  var btn=document.getElementById('shuf-btn');
+  btn.setAttribute('disabled','true');
+  btn.innerHTML='&#10003; Shuffled';
+  setTimeout(function(){card.classList.remove('shuffling');render();busy=false;},640);
+}
+
+function addCardEvents(el){
+  el.addEventListener('touchstart',function(e){tx0=e.touches[0].clientX;ty0=e.touches[0].clientY;},{passive:true});
+  el.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-tx0;
+    var dy=e.changedTouches[0].clientY-ty0;
+    if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>42){goCard(dx<0?1:-1);}
+    else if(Math.abs(dx)<10&&Math.abs(dy)<10){flip();}
+  },{passive:true});
+  el.addEventListener('mousedown',function(e){mx0=e.clientX;my0=e.clientY;mdown=true;});
+  window.addEventListener('mouseup',function(e){
+    if(!mdown)return; mdown=false;
+    var dx=e.clientX-mx0; var dy=e.clientY-my0;
+    if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>42){goCard(dx<0?1:-1);}
+    else if(Math.abs(dx)<6&&Math.abs(dy)<6){flip();}
+  });
+}
+
+document.getElementById('pw').addEventListener('keydown',function(e){if(e.key==='Enter')tryLogin();});
+document.getElementById('enter-btn').addEventListener('click',tryLogin);
+document.getElementById('shuf-btn').addEventListener('click',doShuffle);
+</script>
+</body>
+</html>
